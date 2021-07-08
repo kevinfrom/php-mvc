@@ -15,8 +15,8 @@ return [
 
     'Database' => [
         'host' => 'server.kevinfrom.dk',
-        'username' => 'kevin',
-        'password' => 'QtW0ZRRLq3IPmaria',
+        'username' => 'lorem',
+        'password' => 'ipsum',
         'database' => 'shoppinglist_db',
     ],
 
