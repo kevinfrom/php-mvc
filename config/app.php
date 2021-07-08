@@ -8,9 +8,6 @@ return [
         'defaultLocale' => 'da_DK',
         'defaultTimezone' => 'Europe/Copenhagen',
         'encoding' => 'UTF-8',
-        'database' => [
-
-        ],
     ],
 
     'Database' => [
