@@ -113,7 +113,7 @@ class AppView
      *
      * @return void
      */
-    protected function assign(string $key, $value)
+    public function assign(string $key, $value)
     {
         $this->_data[$key] = $value;
     }
@@ -126,7 +126,7 @@ class AppView
      *
      * @return mixed|null
      */
-    protected function fetch(string $key, $default = false)
+    public function fetch(string $key, $default = false)
     {
         return $this->_data[$key] ?? $default;
     }
@@ -136,7 +136,7 @@ class AppView
      *
      * @param string $block
      */
-    protected function append(string $block)
+    public function append(string $block)
     {
         $this->_blocks[$block] = $this->fetch($block);
         $this->_activeBlock = $block;
@@ -146,7 +146,7 @@ class AppView
     /**
      * End and render a block
      */
-    protected function end()
+    public function end()
     {
         if ($this->_activeBlock) {
             $this->_blocks[$this->_activeBlock] .= ob_get_clean();
@@ -164,9 +164,10 @@ class AppView
      *
      * @return string
      */
-    protected function element(string $element): string
+    public function element(string $element): string
     {
-        return $this->_getRenderedHtml($this->_elementsPath . $element . $this->_fileExt);
+        $elementPath = $this->_elementsPath . $element . $this->_fileExt;
+        return $this->_getRenderedHtml($elementPath);
     }
 
     /**

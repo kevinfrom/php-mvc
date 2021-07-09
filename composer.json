@@ -12,5 +12,9 @@
       "App\\": "src/"
     }
   },
-  "require": {}
+  "require": {
+    "ext-mbstring": "*",
+    "ext-json": "*",
+    "ext-intl": "*"
+  }
 }

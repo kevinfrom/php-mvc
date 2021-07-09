@@ -14,7 +14,6 @@ require_once 'config' . DIRECTORY_SEPARATOR . 'paths.php';
 require_once 'vendor' . DS . 'autoload.php';
 require_once CONFIG . DS . 'functions.php';
 
-$router = new Router();
 
 Configure::initialize();
 $errorLevel = Configure::read('Log.errorLevel');
@@ -25,8 +24,4 @@ ini_set('error_reporting', $errorLevel);
 date_default_timezone_set(Configure::read('App.defaultTimezone'));
 ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 
-try {
-    $router->handleRouting();
-} catch (Throwable $exception) {
-    $router->renderError();
-}
+new Router();

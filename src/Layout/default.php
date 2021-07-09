@@ -18,7 +18,9 @@
 <body>
 
 <?= $this->element('navbar') ?>
-<?= $this->fetch('content') ?>
+<div class="container">
+    <?= $this->fetch('content') ?>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
 <?= $this->fetch('script') ?>

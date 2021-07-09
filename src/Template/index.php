@@ -4,7 +4,4 @@
  */
 ?>
 
-<div class="container">
-    list items goes here...
-</div>
-
+<p>List items goes here...</p>

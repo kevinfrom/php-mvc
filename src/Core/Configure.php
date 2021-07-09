@@ -50,16 +50,6 @@ class Configure
      */
     public static function read(string $key, $default = null)
     {
-        $result = self::$_config;
-        foreach (explode('.', $key) as $recursiveKey) {
-            if (isset($result[$recursiveKey])) {
-                $result = $result[$recursiveKey];
-            } else {
-                $result = $default;
-                break;
-            }
-        }
-
-        return $result;
+        return extractKeyRecursively(self::$_config, $key, $default);
     }
 }
