@@ -26,7 +26,7 @@ Temporary Items
 .apdisk
 
 # IDE projects
-.idea
+.idea/
 .vscode
 
 # App files
@@ -34,3 +34,5 @@ tmp/cache/*
 vendor
 logs/*
 
+# Config
+config/app.local.php

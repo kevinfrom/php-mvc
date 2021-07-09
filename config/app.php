@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'debug' => true,
+    'debug' => false,
     'cache' => true,
 
     'App' => [
@@ -11,10 +11,10 @@ return [
     ],
 
     'Database' => [
-        'host' => 'server.kevinfrom.dk',
-        'username' => 'lorem',
-        'password' => 'ipsum',
-        'database' => 'shoppinglist_db',
+        'host' => '',
+        'username' => '',
+        'password' => '',
+        'database' => '',
     ],
 
     'Cache' => [
