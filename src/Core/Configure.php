@@ -16,20 +16,17 @@ class Configure
     private static array $_config = [];
 
     /**
-     * @var string $_fileExt
-     */
-    private static string $_fileExt = '.php';
-
-    /**
      * Initialize configuration
      */
     public static function initialize()
     {
-        $configPath = CONFIG . DS . 'app' . self::$_fileExt;
+        $configPath = CONFIG . DS . 'app.local.php';
 
-        if (file_exists($configPath)) {
-            self::$_config = include($configPath);
+        if (file_exists($configPath) === false) {
+            throw new \Exception(str_replace(ROOT . DS, '', $configPath) . ' does not exist');
         }
+
+        self::$_config = include($configPath);
     }
 
     /**
