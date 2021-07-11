@@ -24,4 +24,6 @@ ini_set('error_reporting', $errorLevel);
 date_default_timezone_set(Configure::read('App.defaultTimezone'));
 ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 
-new Router();
+require_once CONFIG . DS . 'routes.php';
+
+Router::getInstance()->handleRouting();

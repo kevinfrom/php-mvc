@@ -2,12 +2,7 @@
 
 namespace App\Request;
 
-use App\Controller\AppController;
 use App\Controller\PagesController;
-use App\Logging\Logger;
-use Throwable;
-use App\Controller\ControllerInterface;
-use App\Controller\ErrorController;
 
 /**
  * Class Request
@@ -45,14 +40,9 @@ class Request implements RequestInterface
      */
     public function __construct()
     {
-        try {
-            $this->_parseRequestData();
-            $this->_parseRequestQuery();
-            $this->_parseRequestParams();
-        } catch (Throwable $exception) {
-            Logger::error($exception->getMessage());
-            $this->_throwInternalError();
-        }
+        $this->_parseRequestData();
+        $this->_parseRequestQuery();
+        $this->_parseRequestParams();
     }
 
     /**
@@ -101,57 +91,6 @@ class Request implements RequestInterface
                 }
             }
         }
-
-        $controllerClass = $this->_getControllerClass();
-        /**
-         * @var ControllerInterface $controllerClass
-         */
-        $controllerClass = new $controllerClass($this);
-
-        try {
-            $method = $this->getParam('method');
-
-            if (method_exists($controllerClass, $method)) {
-                $arguments = array_filter($this->_params, function ($key) {
-                    return is_string($key) === false;
-                }, ARRAY_FILTER_USE_KEY);
-
-                $controllerClass->{$method}(...$arguments);
-            } else {
-                $this->_throwNotFound();
-            }
-        } catch (Throwable $exception) {
-            Logger::error($exception->getMessage());
-            $this->_throwInternalError();
-        }
-    }
-
-    /**
-     * Throw not found exception
-     */
-    private function _throwNotFound(): void
-    {
-        $controller = new ErrorController($this);
-        $controller->error404();
-    }
-
-    /**
-     * Throw internal error
-     */
-    private function _throwInternalError(): void
-    {
-        $controller = new ErrorController($this);
-        $controller->error500();
-    }
-
-    /**
-     * Returns the fully-qualified class name of the controller
-     *
-     * @return string
-     */
-    private function _getControllerClass(): string
-    {
-        return '\\App\\Controller\\' . ucfirst($this->getParam('controller')) . 'Controller';
     }
 
     /**
