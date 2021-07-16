@@ -1,20 +1,25 @@
 {
-  "name": "kevin/shoppinglist",
-  "type": "project",
-  "authors": [
-    {
-      "name": "Kevin From",
-      "email": "kevinfrom@live.dk"
-    }
-  ],
-  "autoload": {
-    "psr-4": {
-      "App\\": "src/"
-    }
-  },
-  "require": {
-    "ext-mbstring": "*",
-    "ext-json": "*",
-    "ext-intl": "*"
-  }
+	"name"    : "kevin/shoppinglist",
+	"type"    : "project",
+	"authors" : [
+		{
+			"name" : "Kevin From",
+			"email": "kevinfrom@live.dk"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"App\\": "src/"
+		}
+	},
+	"require" : {
+		"php"         : "^8.0",
+		"ext-mbstring": "*",
+		"ext-json"    : "*",
+		"ext-intl"    : "*"
+	},
+	"scripts" : {
+		"post-install-cmd": "App\\Installer\\AppInstaller::postInstall",
+		"post-update-cmd" : "App\\Installer\\AppInstaller::postupdate"
+	}
 }
