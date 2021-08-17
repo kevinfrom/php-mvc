@@ -4,10 +4,11 @@ if (function_exists('debug') === false) {
      * Debug
      *
      * @param mixed $input
+     * @throws \App\Debug\DebugInformationException
      */
     function debug($input)
     {
-        var_dump($input);
+        \App\Debug\Debugger::debug($input);
     }
 }
 
