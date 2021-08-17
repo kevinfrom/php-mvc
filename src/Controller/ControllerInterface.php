@@ -23,4 +23,13 @@ interface ControllerInterface
      * @return RequestInterface
      */
     public function getRequest(): RequestInterface;
+
+    /**
+     * Load model
+     *
+     * @param string $model
+     *
+     * @return void
+     */
+    public function loadModel(string $model);
 }
