@@ -15,12 +15,17 @@ class Connection
     /**
      * @var PDO|null $_pdo
      */
-    private ?PDO $_pdo;
+    private static ?PDO $_pdo;
 
     /**
-     * @var array|false[] $_config
+     * @var Connection|null $_instance
      */
-    private array $_config = [
+    private static ?Connection $_instance;
+
+    /**
+     * @var array|bool[]|string[] $_config
+     */
+    private static array $_config = [
         'host' => false,
         'username' => false,
         'password' => false,
@@ -29,12 +34,23 @@ class Connection
 
     /**
      * Connection constructor.
+     *
+     * @param array $_config
+     */
+    private function __construct(array $_config)
+    {
+        self::_setConfig($_config);
+        self::_connect();
+    }
+
+    /**
+     * Initialize
+     *
      * @param array $config
      */
-    public function __construct(array $config)
+    public static function initialize(array $config)
     {
-        $this->_setConfig($config);
-        $this->_connect();
+        self::$_instance = new self($config);
     }
 
     /**
@@ -42,18 +58,35 @@ class Connection
      *
      * @param array $config
      */
-    private function _setConfig(array $config)
+    private static function _setConfig(array $config)
     {
-        $this->_config = array_merge($this->_config, $config);
+        self::$_config = array_merge(self::$_config, $config);
     }
 
     /**
      * Create a PDO object and establish a connection
      */
-    private function _connect()
+    private static function _connect()
     {
-        $dsn = '';
-        $this->_pdo = new PDO($dsn);
-        $this->_pdo->query('USE ' . $this->_config['database'] . ';');
+        try {
+            $dsn = 'mysql:host=' . self::$_config['host'] . ';';
+            $dsn .= 'dbname=' . self::$_config['database'] . ';';
+            self::$_pdo = new PDO($dsn, self::$_config['username'], self::$_config['password']);
+        } catch (\Throwable $e) {
+            /**
+             * @var \PDOException $e
+             */
+            throw new ConnectionException($e);
+        }
+    }
+
+    /**
+     * Get connection instance
+     *
+     * @return Connection
+     */
+    public static function getInstance(): Connection
+    {
+        return self::$_instance;
     }
 }
