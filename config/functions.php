@@ -52,3 +52,10 @@ if (function_exists('extractKeyRecursively') === false) {
         return $result;
     }
 }
+
+if (function_exists('stringToUnderscore') === false) {
+    function stringToUnderscore(string $string)
+    {
+        return mb_strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_' . '\\1', $string));
+    }
+}
