@@ -16,6 +16,7 @@ class ListsController extends AppController implements ControllerInterface
 
     /**
      * @inheritDoc
+     * @throws \App\ORM\Model\MissingModelException
      */
     public function __construct(RequestInterface $request)
     {
