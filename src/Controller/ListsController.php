@@ -1,10 +1,13 @@
 <?php
 
-
 namespace App\Controller;
 
-
-class ListsController extends AppContr
+/**
+ * Class ListsController
+ *
+ * @package App\Controller
+ */
+class ListsController extends AppController implements ControllerInterface
 {
 
 }
