@@ -16,8 +16,9 @@
 		"php"         : "^8.0",
 		"ext-mbstring": "*",
 		"ext-json"    : "*",
-		"ext-intl"    : "*"
-	},
+		"ext-intl"    : "*",
+        "ext-pdo"     : "*"
+    },
 	"scripts" : {
 		"post-install-cmd": "App\\Installer\\AppInstaller::postInstall",
 		"post-update-cmd" : "App\\Installer\\AppInstaller::postupdate"
