@@ -62,18 +62,31 @@ class Request implements RequestInterface
             return $pagesController->viewExists($page);
         };
 
-        if (count($params) === 1) {
-            $this->_params = [
-                'controller' => 'Pages',
-                'method' => 'view',
-                $params[0]
-            ];
+        $controllerExists = function (string $controller): bool {
+            $controller = ucfirst(mb_strtolower($controller));
 
-            if ($pageExists($params[0]) === false) {
+            return class_exists('App\\Controller\\' . $controller . 'Controller');
+        };
+
+        if (count($params) === 1) {
+            if ($controllerExists($params[0])) {
                 $this->_params = [
-                    'controller' => 'Error',
-                    'method' => 'error404',
+                    'controller' => ucfirst(mb_strtolower($params[0])),
+                    'method' => 'index',
                 ];
+            } else {
+                $this->_params = [
+                    'controller' => 'Pages',
+                    'method' => 'view',
+                    $params[0],
+                ];
+
+                if ($pageExists($params[0]) === false) {
+                    $this->_params = [
+                        'controller' => 'Error',
+                        'method' => 'error404',
+                    ];
+                }
             }
         } elseif (empty($params)) {
             $this->_params = [
