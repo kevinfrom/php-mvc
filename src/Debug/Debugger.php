@@ -22,6 +22,11 @@ class Debugger
     ];
 
     /**
+     * @var string $calledFrom
+     */
+    private static string $calledFrom;
+
+    /**
      * Debug data
      *
      * @param mixed $data
@@ -46,24 +51,29 @@ class Debugger
 
         if (isCli()) {
             echo str_pad(' DEBUG ', 100, '-', STR_PAD_BOTH) . PHP_EOL;
-            echo self::getCalledFrom() . $data . PHP_EOL;
+            echo self::$calledFrom . $data . PHP_EOL;
         } else {
-            echo sprintf(self::$outputStyles['called_from_format'], self::getCalledFrom());
+            echo sprintf(self::$outputStyles['called_from_format'], self::$calledFrom);
             echo sprintf(self::$outputStyles['output_format'], $data);
         }
     }
 
     /**
-     * Returns the file and line debug is called from
+     * Set called from
      *
-     * @return string
+     * @param bool $isException
+     *
+     * @param      $data
      */
-    public static function getCalledFrom(): string
+    public static function setCalledFrom($data, bool $isException)
     {
-        $backTrace = debug_backtrace();
-        $caller    = array_shift($backTrace);
-
-        return $caller['file'] . ':' . $caller['line'];
+        if ($isException) {
+            self::$calledFrom = $data->getFile() . ':' . $data->getLine();
+        } else {
+            $backTrace        = debug_backtrace();
+            $caller           = array_shift($backTrace);
+            self::$calledFrom = $caller['file'] . ':' . $caller['line'];
+        }
     }
 
     /**
@@ -77,12 +87,21 @@ class Debugger
      */
     public static function getDebugInformation($data, int $depth = 1)
     {
-        $dataType              = gettype($data);
-        $dataType              = ucfirst(mb_strtolower($dataType));
-        $debugInformationClass = "App\\Debug\\Type\\DebugInformation$dataType";
+        $isException = gettype($data) === 'object' && get_class($data) === 'Error';
+        if ($isException) {
+            $dataType = 'Exception';
+        } else {
+            $dataType = gettype($data);
+            $dataType = ucfirst(mb_strtolower($dataType));
+        }
 
+        $debugInformationClass = "App\\Debug\\Type\\DebugInformation$dataType";
         if (class_exists($debugInformationClass) === false) {
             throw new DebugInformationException("Type $dataType DebugInformation class does not exist");
+        }
+
+        if (empty(self::$calledFrom)) {
+            self::setCalledFrom($data, $isException);
         }
 
         $result    = call_user_func([$debugInformationClass, 'getDebugInformation'], $data, $depth);
