@@ -2,6 +2,8 @@
 
 namespace App\Debug;
 
+use Exception;
+
 /**
  * Class Debugger
  */
@@ -87,7 +89,7 @@ class Debugger
      */
     public static function getDebugInformation($data, int $depth = 1)
     {
-        $isException = gettype($data) === 'object' && get_class($data) === 'Error';
+        $isException = gettype($data) === 'object' && $data instanceof Exception;
         if ($isException) {
             $dataType = 'Exception';
         } else {
