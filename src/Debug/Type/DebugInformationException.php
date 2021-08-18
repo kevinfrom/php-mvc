@@ -14,16 +14,22 @@ class DebugInformationException implements DebugInformationInterface
 {
 
     /**
+     * @var string $messageFormat
+     */
+    private static string $messageFormat = '<span style="color: #ff6666;">%s</span>';
+
+    /**
      * @param Error $data
      * @param int   $depth
      *
      * @return string
+     * @throws \App\Debug\DebugInformationException
      */
     public static function getDebugInformation($data, int $depth = 1): string
     {
         $trace  = self::getFormattedTrace($data->getTrace());
         $end    = "\n" . str_repeat("\t", $depth - 1);
-        $result = $data->getMessage();
+        $result = sprintf(self::$messageFormat, $data->getMessage());
         $result .= $end . Debugger::getDebugInformation(['trace' => $trace], $depth);
 
         return $result . $end;
@@ -42,7 +48,7 @@ class DebugInformationException implements DebugInformationInterface
             return [
                 'called' => self::formatCalled($trace),
                 'caller' => $trace['file'],
-                'args' => $trace['args'],
+                'args'   => $trace['args'],
             ];
         }, $trace);
     }
