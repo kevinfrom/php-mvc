@@ -71,7 +71,7 @@ class Debugger
             self::$calledFrom = $data->getFile() . ':' . $data->getLine();
         } else {
             $backTrace        = debug_backtrace();
-            $caller           = array_shift($backTrace);
+            $caller           = $backTrace[4];
             self::$calledFrom = $caller['file'] . ':' . $caller['line'];
         }
     }
