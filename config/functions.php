@@ -4,6 +4,7 @@ if (function_exists('debug') === false) {
      * Debug
      *
      * @param mixed $input
+     *
      * @throws \App\Debug\DebugInformationException
      */
     function debug($input)
@@ -30,9 +31,9 @@ if (function_exists('extractKeyRecursively') === false) {
      * Extract key recursively from a given array
      * E.g. extractKeyRecursively($config, 'Database.host')
      *
-     * @param array $array
+     * @param array  $array
      * @param string $key
-     * @param mixed $default
+     * @param mixed  $default
      *
      * @return mixed
      */
@@ -54,8 +55,27 @@ if (function_exists('extractKeyRecursively') === false) {
 }
 
 if (function_exists('stringToUnderscore') === false) {
+    /**
+     * Returns a string as an underscore version
+     *
+     * @param string $string
+     *
+     * @return string
+     */
     function stringToUnderscore(string $string)
     {
         return mb_strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_' . '\\1', $string));
+    }
+}
+
+if (function_exists('isCli') === false) {
+    /**
+     * Return if context is CLI
+     *
+     * @return bool
+     */
+    function isCli(): bool
+    {
+        return php_sapi_name() === 'cli';
     }
 }

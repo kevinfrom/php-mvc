@@ -15,7 +15,6 @@ class DebugInformationString implements DebugInformationInterface
      */
     public static function getDebugInformation($data, int $depth = 1): string
     {
-        $isCli = php_sapi_name() === 'cli';
-        return $isCli ? (string)$data : htmlentities($data, ENT_SUBSTITUTE);
+        return isCli() ? (string)$data : htmlentities($data, ENT_SUBSTITUTE);
     }
 }

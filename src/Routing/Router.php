@@ -45,8 +45,6 @@ class Router
      */
     public function handleRouting(): void
     {
-
-
         $controllerClass = $this->_getControllerClass();
         /**
          * @var ControllerInterface $controllerClass
