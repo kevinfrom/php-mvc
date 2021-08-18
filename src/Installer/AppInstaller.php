@@ -2,6 +2,8 @@
 
 namespace App\Installer;
 
+use Exception;
+
 /**
  * Class AppInstaller
  *
@@ -36,7 +38,7 @@ class AppInstaller
      */
     private static function print(string $message, string $level = 'info', bool $wrapInParentheses = false): void
     {
-        $level = mb_strtoupper($level);
+        $level  = mb_strtoupper($level);
         $output = $message;
 
         if ($wrapInParentheses) {
@@ -84,9 +86,29 @@ class AppInstaller
         self::print('Running all tasks', 'info', true);
 
         self::initialize();
+        self::setupLoggingDirectory();
         self::copyConfigFile();
 
         self::print('Finished all tasks', 'info', true);
+    }
+
+    /**
+     * Setup logging directory
+     */
+    private static function setupLoggingDirectory(): void
+    {
+        self::print('Setting up logging directory');
+        $dir = self::$rootDir . DS . 'logs';
+
+        if (file_exists($dir) === false && mkdir($dir) === false) {
+            throw new Exception("Failed to create logging directory $dir");
+        }
+
+        if (chmod($dir, 0770) === false) {
+            throw new Exception("Failed to set file permissions for logging directory $dir");
+        }
+
+        self::print('Set up logging directory');
     }
 
     /**
