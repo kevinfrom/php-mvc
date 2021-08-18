@@ -42,6 +42,7 @@ class DebugInformationException implements DebugInformationInterface
             return [
                 'called' => self::formatCalled($trace),
                 'caller' => $trace['file'],
+                'args' => $trace['args'],
             ];
         }, $trace);
     }
