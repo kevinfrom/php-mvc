@@ -68,6 +68,26 @@ if (function_exists('stringToUnderscore') === false) {
     }
 }
 
+if (function_exists('singularize') === false) {
+    /**
+     * Returns a singularized string
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    function singularize(string $string): string
+    {
+        $lastChar = substr($string, -1, 1);
+
+        if (mb_strtolower($lastChar) === 's') {
+            return substr($string, 0, -1);
+        }
+
+        return $string;
+    }
+}
+
 if (function_exists('isCli') === false) {
     /**
      * Return if context is CLI
