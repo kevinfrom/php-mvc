@@ -32,6 +32,9 @@ class DebugInformationArray implements DebugInformationInterface
             $values[] = $break . Debugger::getDebugInformation($key, $depth + 1) . ' => ' . $value;
         }
 
-        return $result . implode(', ', $values) . $end . ']';
+        $result .= implode(', ', $values);
+        $result .= $values ? $end : null;
+
+        return $result . ']';
     }
 }
