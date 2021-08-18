@@ -18,8 +18,10 @@ if (function_exists('dd') === false) {
      * Dump and die
      *
      * @param mixed $input
+     *
+     * @throws \App\Debug\DebugInformationException
      */
-    function dd($input)
+    function dd(mixed $input)
     {
         debug($input);
         die;
