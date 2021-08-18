@@ -64,8 +64,7 @@ class Router
                 $this->_throwNotFound();
             }
         } catch (Throwable $exception) {
-            Logger::error($exception->getMessage());
-            $this->_throwInternalError();
+            $this->_throwInternalError($exception);
         }
     }
 
@@ -112,11 +111,13 @@ class Router
 
     /**
      * Throw internal error
+     *
+     * @param Throwable $exception
      */
-    private function _throwInternalError(): void
+    private function _throwInternalError(Throwable $exception): void
     {
         $controller = new ErrorController($this->getRequest());
-        $controller->error500();
+        $controller->error500($exception);
     }
 
     /**
