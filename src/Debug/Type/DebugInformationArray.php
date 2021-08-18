@@ -18,18 +18,18 @@ class DebugInformationArray implements DebugInformationInterface
     public static function getDebugInformation($data, int $depth = 1): string
     {
         $result = '[';
-        $break = null;
-        $end = null;
+        $break  = "\n" . str_repeat("\t", $depth);
+        $end    = "\n" . str_repeat("\t", $depth - 1);
 
         $values = [];
         foreach ($data as $key => $value) {
             if ($key === 'GLOBALS' && is_array($value) && isset($value['GLOBALS'])) {
                 $value = '[recursion]';
             } elseif ($value !== $data) {
-                $value = Debugger::getDebugInformation($value);
+                $value = Debugger::getDebugInformation($value, $depth + 1);
             }
 
-            $values[] = $break . Debugger::getDebugInformation($key) . ' => ' . $value;
+            $values[] = $break . Debugger::getDebugInformation($key, $depth + 1) . ' => ' . $value;
         }
 
         return $result . implode(', ', $values) . $end . ']';
