@@ -4,6 +4,7 @@ namespace App\Logging;
 
 /**
  * Class Logger
+ *
  * @package App\Logging
  */
 class Logger
@@ -18,7 +19,7 @@ class Logger
      * Log to a given level
      *
      * @param string $level
-     * @param $value
+     * @param        $value
      */
     private static function _log(string $level, $value)
     {
@@ -30,9 +31,9 @@ class Logger
      * Write content to file
      *
      * @param string $file
-     * @param $content
+     * @param        $value
      * @param string $level
-     * @param bool $append
+     * @param bool   $append
      */
     private static function _writeContentToFile(string $file, $value, string $level, bool $append = true)
     {
