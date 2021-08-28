@@ -3,6 +3,7 @@
 namespace App\ORM\Connection;
 
 use PDO;
+use PDOException;
 
 /**
  * Class Connection
@@ -26,7 +27,7 @@ class Connection
      * @var array|bool[]|string[] $_config
      */
     private static array $_config = [
-        'host' => false,
+        'host'     => false,
         'username' => false,
         'password' => false,
         'database' => false,
@@ -69,8 +70,8 @@ class Connection
     private static function _connect()
     {
         try {
-            $dsn = 'mysql:host=' . self::$_config['host'] . ';';
-            $dsn .= 'dbname=' . self::$_config['database'] . ';';
+            $dsn        = 'mysql:host=' . self::$_config['host'] . ';';
+            $dsn        .= 'dbname=' . self::$_config['database'] . ';';
             self::$_pdo = new PDO($dsn, self::$_config['username'], self::$_config['password']);
         } catch (\Throwable $e) {
             /**
@@ -88,5 +89,26 @@ class Connection
     public static function getInstance(): Connection
     {
         return self::$_instance;
+    }
+
+    /**
+     * Execute an SQL query. The result is returned as an array
+     *
+     * @param string $query
+     * @param bool   $firstOnly
+     *
+     * @return array
+     */
+    public function query(string $query, bool $firstOnly = false): array
+    {
+        try {
+            $result = self::$_pdo->query($query);
+            $result->execute();
+            $fetchMethod = $firstOnly ? 'fetch' : 'fetchAll';
+
+            return $result->$fetchMethod(PDO::FETCH_ASSOC) ?: [];
+        } catch (PDOException $e) {
+            throw new ConnectionException($e);
+        }
     }
 }
