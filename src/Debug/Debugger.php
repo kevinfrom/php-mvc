@@ -11,6 +11,11 @@ class Debugger
 {
 
     /**
+     * @var int $traceOffset
+     */
+    private static int $traceOffset = 0;
+
+    /**
      * @var array $outputStyles
      */
     private static array $outputStyles = [
@@ -33,10 +38,11 @@ class Debugger
      *
      * @param mixed $data
      *
-     * @throws DebugInformationException
+     * @throws DebugInformationException|DebuggerException
      */
-    public static function debug($data)
+    public static function debug(mixed $data, int $traceOffset)
     {
+        self::$traceOffset = $traceOffset;
         self::output(self::getDebugInformation($data));
     }
 
@@ -44,6 +50,8 @@ class Debugger
      * Output a formatted debug
      *
      * @param $data
+     *
+     * @throws DebuggerException
      */
     private static function output($data)
     {
@@ -73,7 +81,7 @@ class Debugger
             self::$calledFrom = $data->getFile() . ':' . $data->getLine();
         } else {
             $backTrace        = debug_backtrace();
-            $caller           = $backTrace[4];
+            $caller           = $backTrace[self::$traceOffset];
             self::$calledFrom = $caller['file'] . ':' . $caller['line'];
         }
     }

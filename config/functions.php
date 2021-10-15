@@ -4,12 +4,13 @@ if (function_exists('debug') === false) {
      * Debug
      *
      * @param mixed $input
+     * @param int   $traceOffset
      *
      * @throws \App\Debug\DebugInformationException
      */
-    function debug($input)
+    function debug(mixed $input, int $traceOffset = 3)
     {
-        \App\Debug\Debugger::debug($input);
+        App\Debug\Debugger::debug($input, $traceOffset);
     }
 }
 
@@ -18,12 +19,13 @@ if (function_exists('dd') === false) {
      * Dump and die
      *
      * @param mixed $input
+     * @param int   $traceOffset
      *
      * @throws \App\Debug\DebugInformationException
      */
-    function dd(mixed $input)
+    function dd(mixed $input, int $traceOffset = 4)
     {
-        debug($input);
+        debug($input, $traceOffset);
         die;
     }
 }
