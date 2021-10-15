@@ -17,12 +17,30 @@ class ErrorController extends AppController implements ControllerInterface
 {
 
     /**
+     * Returns if debug is active
+     *
+     * @return bool
+     */
+    private function debugActive(): bool
+    {
+        return (bool)Configure::read('debug');
+    }
+
+    /**
      * Render error 404 view
      */
     public function error404(): void
     {
+        $debugMessage = ['The requested uri was not found', 'Request uri: ' . $_SERVER['REQUEST_URI']];
+        if ($this->debugActive()) {
+            Logger::error($debugMessage);
+            http_response_code(500);
+            throw new MissingViewException();
+        }
+
+        http_response_code(404);
         new AppView('404');
-        Logger::debug(['The requested uri was not found', 'Request uri: ' . $_SERVER['REQUEST_URI']]);
+        Logger::debug($debugMessage);
     }
 
     /**
@@ -32,8 +50,9 @@ class ErrorController extends AppController implements ControllerInterface
      */
     public function error500(Throwable $exception): void
     {
+        http_response_code(500);
         Logger::error($exception->getMessage());
-        if (Configure::read('debug')) {
+        if ($this->debugActive()) {
             dd($exception);
         }
 
