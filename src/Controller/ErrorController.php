@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Core\Configure;
 use App\Logging\Logger;
 use App\View\AppView;
+use App\View\MissingViewException;
 use Throwable;
 
 /**
@@ -26,6 +27,8 @@ class ErrorController extends AppController implements ControllerInterface
 
     /**
      * Render error 500 view
+     *
+     * @throws \App\Debug\DebugInformationException
      */
     public function error500(Throwable $exception): void
     {
