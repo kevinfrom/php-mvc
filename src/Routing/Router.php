@@ -45,6 +45,13 @@ class Router
      */
     public function handleRouting(): void
     {
+        $connectedRoute = $this->_getConnectedRoute();
+        if ($connectedRoute) {
+            foreach ($connectedRoute as $param => $value) {
+                $this->getRequest()->setParam($param, $value);
+            }
+        }
+
         $controllerClass = $this->_getControllerClass();
         /**
          * @var ControllerInterface $controllerClass
@@ -78,6 +85,16 @@ class Router
         $controller = $this->getRequest()->getParam('controller');
 
         return '\\App\\Controller\\' . ucfirst($controller) . 'Controller';
+    }
+
+    /**
+     * Get connected route
+     *
+     * @return array|null
+     */
+    public function _getConnectedRoute(): ?array
+    {
+        return $this->_connectedRoutes[$this->getRequest()->getPath()] ?? null;
     }
 
     /**
@@ -123,7 +140,7 @@ class Router
     /**
      * Connect a route to a controller method
      *
-     * @param string $uri
+     * @param string         $uri
      * @param array|string[] $params
      */
     public function connect(string $uri, array $params): void

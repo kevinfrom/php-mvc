@@ -6,6 +6,7 @@ use App\Controller\PagesController;
 
 /**
  * Class Request
+ *
  * @package App\Request
  */
 class Request implements RequestInterface
@@ -18,7 +19,7 @@ class Request implements RequestInterface
      */
     private array $_params = [
         'controller' => '',
-        'method' => '',
+        'method'     => '',
     ];
 
     /**
@@ -59,6 +60,7 @@ class Request implements RequestInterface
 
         $pageExists = function (string $page): bool {
             $pagesController = new PagesController($this);
+
             return $pagesController->viewExists($page);
         };
 
@@ -72,26 +74,26 @@ class Request implements RequestInterface
             if ($controllerExists($params[0])) {
                 $this->_params = [
                     'controller' => ucfirst(mb_strtolower($params[0])),
-                    'method' => 'index',
+                    'method'     => 'index',
                 ];
             } else {
                 $this->_params = [
                     'controller' => 'Pages',
-                    'method' => 'view',
+                    'method'     => 'view',
                     $params[0],
                 ];
 
                 if ($pageExists($params[0]) === false) {
                     $this->_params = [
                         'controller' => 'Error',
-                        'method' => 'error404',
+                        'method'     => 'error404',
                     ];
                 }
             }
         } elseif (empty($params)) {
             $this->_params = [
                 'controller' => 'Pages',
-                'method' => 'view',
+                'method'     => 'view',
             ];
         } else {
             foreach ($params as $param) {
@@ -133,11 +135,20 @@ class Request implements RequestInterface
     /**
      * @inheritDoc
      */
+    public function setParam(string $key, string $value): void
+    {
+        if (isset($this->_params[$key])) {
+            $this->_params[$key] = $value;
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getParams(): ?array
     {
         return $this->_params;
     }
-
 
     /**
      * @inheritDoc
@@ -153,5 +164,13 @@ class Request implements RequestInterface
     public function getData(string $key, $default = null)
     {
         return extractKeyRecursively($this->_data, $key, $default);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPath(): ?string
+    {
+        return $_SERVER['REQUEST_URI'] ?? null;
     }
 }
