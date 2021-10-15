@@ -26,4 +26,11 @@ interface ModelInterface
      * @return EntityInterface
      */
     public function newEntity(array $data = []): EntityInterface;
+
+    /**
+     * Get SQL table name
+     *
+     * @return string
+     */
+    public function getTable(): string;
 }

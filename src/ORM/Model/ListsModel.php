@@ -56,4 +56,12 @@ class ListsModel implements ModelInterface
 
         return new $this->entityClass($data);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTable(): string
+    {
+        return $this->table;
+    }
 }

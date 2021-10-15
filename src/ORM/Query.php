@@ -20,9 +20,9 @@ class Query
     private array $conditions = [];
 
     /**
-     * @var array $from
+     * @var string $from
      */
-    private array $from = [];
+    private string $from;
 
     /**
      * @var int $limits
@@ -42,6 +42,7 @@ class Query
     public function __construct(ModelInterface $model)
     {
         $this->model = $model;
+        $this->from  = $model->getTable();
     }
 
     /**
@@ -59,7 +60,7 @@ class Query
             $result = 'SELECT * ';
         }
 
-        $result .= 'FROM ' . implode(', ', $this->from);
+        $result .= 'FROM ' . $this->from;
         $result .= $where;
 
         if ($this->limit) {
