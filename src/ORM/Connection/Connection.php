@@ -5,6 +5,7 @@ namespace App\ORM\Connection;
 use App\Traits\SingletonTrait;
 use PDO;
 use PDOException;
+use PDOStatement;
 
 /**
  * @method static Connection getInstance
@@ -52,15 +53,20 @@ class Connection
     {
         try {
             extract($this->_config);
-            $this->_pdo = new PDO("mysql:host=$host;dbname=$database", $username, $password);
-            $this->_pdo->exec('SET NAMES utf8');
-            $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (\Throwable $e) {
-            /**
-             * @var \PDOException $e
-             */
+            $this->_pdo = new PDO("mysql:host=$host;dbname=$database", $username, $password, [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_CURSOR             => PDO::CURSOR_FWDONLY,
+            ]);
+            $this->_pdo->exec('SET NAMES utf8;');
+        } catch (PDOException $e) {
             throw new ConnectionException($e);
         }
+    }
+
+    public function prepare(string $query): PDOStatement
+    {
+        return $this->_pdo->prepare($query);
     }
 
     /**
@@ -74,10 +80,7 @@ class Connection
     public function query(string $query, bool $firstOnly = false): array
     {
         try {
-            $result = $this->_pdo->query($query);
-            $fetchMethod = $firstOnly ? 'fetch' : 'fetchAll';
-
-            return $result->$fetchMethod(PDO::FETCH_ASSOC) ?: [];
+            return $this->_pdo->query($query)->{$firstOnly ? 'fetch' : 'fetchAll'}() ?: [];
         } catch (PDOException $e) {
             throw new ConnectionException($e);
         }

@@ -63,8 +63,16 @@ class Console
         echo PHP_EOL;
     }
 
+    /**
+     * @throws ConsoleException
+     */
     public function run()
     {
-        call_user_func([$this->shell, $this->method ?: 'help'], $this->args);
+        if ($this->method === null) {
+            $this->shell->help();
+        } else {
+            $this->shell->initialize();
+            call_user_func([$this->shell, $this->method ?: 'help'], $this->args);
+        }
     }
 }

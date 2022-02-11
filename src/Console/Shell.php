@@ -21,10 +21,14 @@ abstract class Shell implements ShellInterface
         $this->console = $console;
     }
 
+    public function initialize()
+    {
+    }
+
     /**
      * @throws ConsoleException
      */
-    public function help()
+    final public function help()
     {
         $reflectionClass = new ReflectionClass($this);
 

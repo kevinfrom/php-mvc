@@ -10,3 +10,4 @@ const CONFIG = ROOT . DS . 'config';
 const TMP = ROOT . DS . 'tmp';
 const CACHE = TMP . DS . 'cache';
 const LOGS = ROOT . DS . 'logs';
+const MIGRATIONS = ROOT . DS . 'migrations';
