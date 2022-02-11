@@ -7,7 +7,7 @@ use PDO;
 use PDOException;
 
 /**
- * @method static Connection getInstance
+ * @method static Connection getInstance(array $_config)
  */
 class Connection
 {
