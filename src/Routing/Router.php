@@ -2,16 +2,14 @@
 
 namespace App\Routing;
 
-use App\Controller\AppController;
 use App\Controller\ControllerInterface;
 use App\Controller\ErrorController;
-use App\Logging\Logger;
 use App\Request\Request;
 use App\Traits\SingletonTrait;
 use Throwable;
 
 /**
- * @method Router static getInstance
+ * @method static Router getInstance
  */
 class Router
 {
@@ -72,18 +70,6 @@ class Router
     }
 
     /**
-     * Returns the fully-qualified class name of the controller
-     *
-     * @return string
-     */
-    private function _getControllerClass(): string
-    {
-        $controller = $this->getRequest()->getParam('controller');
-
-        return '\\App\\Controller\\' . ucfirst($controller) . 'Controller';
-    }
-
-    /**
      * Get connected route
      *
      * @return array|null
@@ -99,6 +85,18 @@ class Router
     public function getRequest(): Request
     {
         return $this->_request;
+    }
+
+    /**
+     * Returns the fully-qualified class name of the controller
+     *
+     * @return string
+     */
+    private function _getControllerClass(): string
+    {
+        $controller = $this->getRequest()->getParam('controller');
+
+        return '\\App\\Controller\\' . ucfirst($controller) . 'Controller';
     }
 
     /**
@@ -124,7 +122,7 @@ class Router
     /**
      * Connect a route to a controller method
      *
-     * @param string         $uri
+     * @param string $uri
      * @param array|string[] $params
      */
     public function connect(string $uri, array $params): void

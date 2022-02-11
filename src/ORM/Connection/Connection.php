@@ -7,7 +7,7 @@ use PDO;
 use PDOException;
 
 /**
- * @method Connection static getInstance
+ * @method static Connection getInstance
  */
 class Connection
 {

@@ -10,10 +10,10 @@ trait SingletonTrait
     {
     }
 
-    public static function getInstance($args = null)
+    public static function getInstance()
     {
         if (empty(self::$instance)) {
-            self::$instance = new static($args);
+            self::$instance = new static(...func_get_args());
         }
 
         return self::$instance;
