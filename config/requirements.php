@@ -1,6 +1,7 @@
 <?php
-if (version_compare(PHP_VERSION, '8.0.0') < 0) {
-    trigger_error('Your PHP version must be equal or higher than 8.0.0.' . PHP_EOL, E_USER_ERROR);
+
+if (version_compare(PHP_VERSION, '7.4.0') < 0) {
+    trigger_error('Your PHP version must be equal or higher than 7.4.0.' . PHP_EOL, E_USER_ERROR);
 }
 
 $requiredExtensions = ['pdo_mysql', 'intl', 'json', 'mbstring'];
