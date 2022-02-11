@@ -7,7 +7,7 @@ use PDO;
 use PDOException;
 
 /**
- * @method static Connection getInstance(array $_config)
+ * @method static Connection getInstance
  */
 class Connection
 {
@@ -17,27 +17,22 @@ class Connection
     /**
      * @var PDO|null $_pdo
      */
-    private static ?PDO $_pdo;
+    public ?PDO $_pdo;
 
     /**
      * @var array|bool[]|string[] $_config
      */
-    private static array $_config = [
+    private array $_config = [
         'host'     => false,
         'username' => false,
         'password' => false,
         'database' => false,
     ];
 
-    /**
-     * Connection constructor.
-     *
-     * @param array $_config
-     */
-    private function __construct(array $_config)
+    public function initialize(array $_config)
     {
-        self::_setConfig($_config);
-        self::_connect();
+        $this->_setConfig($_config);
+        $this->_connect();
     }
 
     /**
@@ -45,20 +40,21 @@ class Connection
      *
      * @param array $config
      */
-    private static function _setConfig(array $config)
+    private function _setConfig(array $config)
     {
-        self::$_config = array_merge(self::$_config, $config);
+        $this->_config = array_merge($this->_config, $config);
     }
 
     /**
      * Create a PDO object and establish a connection
      */
-    private static function _connect()
+    private function _connect()
     {
         try {
-            $dsn = 'mysql:host=' . self::$_config['host'] . ';';
-            $dsn .= 'dbname=' . self::$_config['database'] . ';';
-            self::$_pdo = new PDO($dsn, self::$_config['username'], self::$_config['password']);
+            extract($this->_config);
+            $this->_pdo = new PDO("mysql:host=$host;dbname=$database", $username, $password);
+            $this->_pdo->exec('SET NAMES utf8');
+            $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (\Throwable $e) {
             /**
              * @var \PDOException $e
@@ -78,11 +74,25 @@ class Connection
     public function query(string $query, bool $firstOnly = false): array
     {
         try {
-            $result = self::$_pdo->query($query);
-            $result->execute();
+            $result = $this->_pdo->query($query);
             $fetchMethod = $firstOnly ? 'fetch' : 'fetchAll';
 
             return $result->$fetchMethod(PDO::FETCH_ASSOC) ?: [];
+        } catch (PDOException $e) {
+            throw new ConnectionException($e);
+        }
+    }
+
+    /**
+     * Execute a query directly
+     *
+     * @param string $sql
+     * @return false|int
+     */
+    public function exec(string $sql)
+    {
+        try {
+            return $this->_pdo->exec($sql);
         } catch (PDOException $e) {
             throw new ConnectionException($e);
         }
