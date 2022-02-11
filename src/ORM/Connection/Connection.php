@@ -2,26 +2,22 @@
 
 namespace App\ORM\Connection;
 
+use App\Traits\SingletonTrait;
 use PDO;
 use PDOException;
 
 /**
- * Class Connection
- *
- * @package App\ORM\Connection
+ * @method Connection static getInstance
  */
 class Connection
 {
+
+    use SingletonTrait;
 
     /**
      * @var PDO|null $_pdo
      */
     private static ?PDO $_pdo;
-
-    /**
-     * @var Connection|null $_instance
-     */
-    private static ?Connection $_instance;
 
     /**
      * @var array|bool[]|string[] $_config
@@ -45,16 +41,6 @@ class Connection
     }
 
     /**
-     * Initialize
-     *
-     * @param array $config
-     */
-    public static function initialize(array $config)
-    {
-        self::$_instance = new self($config);
-    }
-
-    /**
      * Set config
      *
      * @param array $config
@@ -70,8 +56,8 @@ class Connection
     private static function _connect()
     {
         try {
-            $dsn        = 'mysql:host=' . self::$_config['host'] . ';';
-            $dsn        .= 'dbname=' . self::$_config['database'] . ';';
+            $dsn = 'mysql:host=' . self::$_config['host'] . ';';
+            $dsn .= 'dbname=' . self::$_config['database'] . ';';
             self::$_pdo = new PDO($dsn, self::$_config['username'], self::$_config['password']);
         } catch (\Throwable $e) {
             /**
@@ -82,20 +68,10 @@ class Connection
     }
 
     /**
-     * Get connection instance
-     *
-     * @return Connection
-     */
-    public static function getInstance(): Connection
-    {
-        return self::$_instance;
-    }
-
-    /**
      * Execute an SQL query. The result is returned as an array
      *
      * @param string $query
-     * @param bool   $firstOnly
+     * @param bool $firstOnly
      *
      * @return array
      */

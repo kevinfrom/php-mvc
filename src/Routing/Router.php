@@ -7,25 +7,21 @@ use App\Controller\ControllerInterface;
 use App\Controller\ErrorController;
 use App\Logging\Logger;
 use App\Request\Request;
+use App\Traits\SingletonTrait;
 use Throwable;
 
 /**
- * Class Router
- *
- * @package App\Routing
+ * @method Router static getInstance
  */
 class Router
 {
+
+    use SingletonTrait;
 
     /**
      * @var Request|null $_request
      */
     private ?Request $_request;
-
-    /**
-     * @var Router|null $_instance
-     */
-    private static ?Router $_instance;
 
     /**
      * @var array|string[]
@@ -103,18 +99,6 @@ class Router
     public function getRequest(): Request
     {
         return $this->_request;
-    }
-
-    /**
-     * @return Router
-     */
-    public static function getInstance(): Router
-    {
-        if (empty(self::$_instance)) {
-            self::$_instance = new self;
-        }
-
-        return self::$_instance;
     }
 
     /**

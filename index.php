@@ -7,8 +7,8 @@ ini_set('error_reporting', E_ALL);
 require_once 'config' . DIRECTORY_SEPARATOR . 'requirements.php';
 
 use App\Core\Configure;
-use App\Routing\Router;
 use App\ORM\Connection\Connection;
+use App\Routing\Router;
 
 
 require_once 'config' . DIRECTORY_SEPARATOR . 'paths.php';
@@ -27,5 +27,5 @@ ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 
 require_once CONFIG . DS . 'routes.php';
 
-Connection::initialize(Configure::read('Database'));
+Connection::getInstance(Configure::read('Database'));
 Router::getInstance()->handleRouting();
