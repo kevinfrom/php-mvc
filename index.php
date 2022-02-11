@@ -25,7 +25,9 @@ ini_set('error_reporting', $errorLevel);
 date_default_timezone_set(Configure::read('App.defaultTimezone'));
 ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 
-require_once CONFIG . DS . 'routes.php';
+if ($argv[0] !== 'console.php') {
+    require_once CONFIG . DS . 'routes.php';
 
-Connection::getInstance(Configure::read('Database'));
-Router::getInstance()->handleRouting();
+    Connection::getInstance(Configure::read('Database'));
+    Router::getInstance()->handleRouting();
+}
