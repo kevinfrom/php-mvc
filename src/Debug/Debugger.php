@@ -61,7 +61,7 @@ class Debugger
 
         if (isCli()) {
             echo str_pad(' DEBUG ', 100, '-', STR_PAD_BOTH) . PHP_EOL;
-            echo self::$calledFrom . $data . PHP_EOL;
+            echo self::$calledFrom . PHP_EOL . $data . PHP_EOL;
         } else {
             echo sprintf(self::$outputStyles['called_from_format'], self::$calledFrom);
             echo sprintf(self::$outputStyles['output_format'], $data);
