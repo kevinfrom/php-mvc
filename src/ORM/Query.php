@@ -42,32 +42,7 @@ class Query
     public function __construct(ModelInterface $model)
     {
         $this->model = $model;
-        $this->from  = $model->getTable();
-    }
-
-    /**
-     * To string
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        $where = $this->conditions === [] ? '' : ' WHERE ' . implode(' AND ', $this->conditions);
-
-        if ($this->fields) {
-            $result = 'SELECT ' . implode(', ', $this->fields);
-        } else {
-            $result = 'SELECT * ';
-        }
-
-        $result .= 'FROM ' . $this->from;
-        $result .= $where;
-
-        if ($this->limit) {
-            $result .= ' LIMIT ' . $this->limit;
-        }
-
-        return $result . ';';
+        $this->from = $model->getTable();
     }
 
     /**
@@ -89,43 +64,23 @@ class Query
     /**
      * Add where clause
      *
-     * @param string ...$where
+     * @param array|string[]|string $conditions
      *
      * @return $this
      */
-    public function where(string ...$where): Query
+    public function where($conditions): Query
     {
-        $this->conditions = array_merge($this->conditions, func_get_args());
-
-        return $this;
-    }
-
-    /**
-     * Add from clause
-     *
-     * @param string      $table
-     * @param string|null $alias
-     *
-     * @return $this
-     */
-    public function from(string $table, ?string $alias = null): Query
-    {
-        $from              = $alias ? "$table as $alias" : $table;
-        $this->from[$from] = $from;
-
-        return $this;
-    }
-
-    /**
-     * Set limit
-     *
-     * @param int $limit
-     *
-     * @return Query
-     */
-    public function limit(int $limit): Query
-    {
-        $this->limit = $limit;
+        if (is_string($conditions)) {
+            $this->conditions[] = $conditions;
+        } else {
+            foreach ($conditions as $key => $value) {
+                if (ctype_digit($key)) {
+                    $this->conditions[] = $value;
+                } else {
+                    $this->conditions[$key] = $value;
+                }
+            }
+        }
 
         return $this;
     }
@@ -145,6 +100,66 @@ class Query
         }
 
         return $result;
+    }
+
+    /**
+     * Set limit
+     *
+     * @param int $limit
+     *
+     * @return Query
+     */
+    public function limit(int $limit): Query
+    {
+        $this->limit = $limit;
+
+        return $this;
+    }
+
+    /**
+     * To string
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        $where = $this->conditions === [] ? '' : ' WHERE ' . implode(' AND ', $this->conditions);
+
+        if ($this->fields) {
+            $result = 'SELECT ' . implode(', ', $this->fields);
+        } else {
+            $result = 'SELECT * ';
+        }
+
+        $result .= 'FROM ' . $this->from;
+        $result .= $this->prepareWhereForQuery();
+
+        if ($this->limit) {
+            $result .= ' LIMIT ' . $this->limit;
+        }
+
+        return $result . ';';
+    }
+
+    /**
+     * Prepare where clause for SQL query
+     *
+     * @return string
+     */
+    private function prepareWhereForQuery(): string
+    {
+        $result = '';
+
+        foreach ($this->conditions as $key => $value) {
+            if (ctype_digit($key)) {
+                $result .= " $value";
+            } else {
+                $result .= " $key = `$value`";
+            }
+        }
+        dd(' ' . trim($result));
+
+        return ' ' . trim($result);
     }
 
     /**

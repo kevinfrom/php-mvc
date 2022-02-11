@@ -17,7 +17,8 @@
 		"ext-mbstring": "*",
 		"ext-json"    : "*",
 		"ext-intl"    : "*",
-        "ext-pdo"     : "*"
+        "ext-pdo"     : "*",
+        "ext-ctype": "*"
     },
 	"scripts" : {
 		"post-install-cmd": "App\\Installer\\AppInstaller::postInstall",

@@ -40,7 +40,7 @@ class Debugger
      *
      * @throws DebugInformationException|DebuggerException
      */
-    public static function debug(mixed $data, int $traceOffset)
+    public static function debug($data, int $traceOffset)
     {
         self::$traceOffset = $traceOffset;
         self::output(self::getDebugInformation($data));

@@ -8,7 +8,7 @@ if (function_exists('debug') === false) {
      *
      * @throws \App\Debug\DebugInformationException
      */
-    function debug(mixed $input, int $traceOffset = 3)
+    function debug($input, int $traceOffset = 3)
     {
         App\Debug\Debugger::debug($input, $traceOffset);
     }
@@ -23,7 +23,7 @@ if (function_exists('dd') === false) {
      *
      * @throws \App\Debug\DebugInformationException
      */
-    function dd(mixed $input, int $traceOffset = 4)
+    function dd($input, int $traceOffset = 4)
     {
         debug($input, $traceOffset);
         die;
