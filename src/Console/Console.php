@@ -72,7 +72,7 @@ class Console
             $this->shell->help();
         } else {
             $this->shell->initialize();
-            call_user_func([$this->shell, $this->method ?: 'help'], $this->args);
+            call_user_func([$this->shell, $this->method], $this->args);
         }
     }
 }
