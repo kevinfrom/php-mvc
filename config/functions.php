@@ -8,7 +8,7 @@ if (function_exists('debug') === false) {
      *
      * @throws \App\Debug\DebugInformationException
      */
-    function debug($input, int $traceOffset = 3)
+    function debug(mixed $input, int $traceOffset = 3)
     {
         App\Debug\Debugger::debug($input, $traceOffset);
     }
@@ -23,7 +23,7 @@ if (function_exists('dd') === false) {
      *
      * @throws \App\Debug\DebugInformationException
      */
-    function dd($input, int $traceOffset = 4)
+    function dd(mixed $input, int $traceOffset = 4)
     {
         debug($input, $traceOffset);
         die;
@@ -82,7 +82,7 @@ if (function_exists('singularize') === false) {
      */
     function singularize(string $string): string
     {
-        $lastChar = substr($string, -1, 1);
+        $lastChar = $string[strlen($string) - 1];
 
         if (mb_strtolower($lastChar) === 's') {
             return substr($string, 0, -1);
@@ -100,6 +100,6 @@ if (function_exists('isCli') === false) {
      */
     function isCli(): bool
     {
-        return php_sapi_name() === 'cli';
+        return PHP_SAPI === 'cli';
     }
 }
