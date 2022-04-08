@@ -27,7 +27,7 @@ ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 
 Connection::getInstance()->initialize(Configure::read('Database'));
 
-if ($argv[0] !== 'console.php') {
+if (isCli() === false) {
     require_once CONFIG . DS . 'routes.php';
 
     Router::getInstance()->handleRouting();
