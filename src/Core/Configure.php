@@ -48,7 +48,7 @@ class Configure
      *
      * @return mixed
      */
-    public static function read(string $key, $default = null)
+    public static function read(string $key, mixed $default = null): mixed
     {
         return extractKeyRecursively(self::$_config, $key, $default);
     }

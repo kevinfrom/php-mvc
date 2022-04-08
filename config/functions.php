@@ -41,7 +41,7 @@ if (function_exists('extractKeyRecursively') === false) {
      *
      * @return mixed
      */
-    function extractKeyRecursively(array $array, string $key, $default = null)
+    function extractKeyRecursively(array $array, string $key, mixed $default = null): mixed
     {
         $result = $array;
 
