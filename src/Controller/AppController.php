@@ -41,7 +41,7 @@ class AppController implements ControllerInterface
     {
         $class = ModelFactory::getModel($model);
 
-        if (empty($class)) {
+        if ($class === null) {
             throw new MissingModelException("Model $model does not exist.");
         }
 
