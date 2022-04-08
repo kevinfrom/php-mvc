@@ -73,14 +73,18 @@ class Connection
      * Execute an SQL query. The result is returned as an array
      *
      * @param string $query
+     * @param array $params
      * @param bool $firstOnly
      *
      * @return array
      */
-    public function query(string $query, bool $firstOnly = false): array
+    public function query(string $query, array $params, bool $firstOnly = false): array
     {
         try {
-            return $this->_pdo->query($query)->{$firstOnly ? 'fetch' : 'fetchAll'}() ?: [];
+            $queryObj = $this->_pdo->prepare($query);
+            $queryObj->execute($params);
+
+            return $queryObj->{$firstOnly ? 'fetch' : 'fetchAll'}() ?: [];
         } catch (PDOException $e) {
             throw new ConnectionException($e);
         }

@@ -20,6 +20,11 @@ class Query
     private array $conditions = [];
 
     /**
+     * @var array $args
+     */
+    private array $args = [];
+
+    /**
      * @var string $from
      */
     private string $from;
@@ -62,24 +67,20 @@ class Query
     }
 
     /**
-     * Add where clause
+     * Add where clause condition
      *
-     * @param array|string[]|string $conditions
-     *
+     * @param array|string[] $conditions
      * @return $this
+     * @throws BadQueryConditionException
      */
-    public function where($conditions): Query
+    public function where(array $conditions): Query
     {
-        if (is_string($conditions)) {
-            $this->conditions[] = $conditions;
-        } else {
-            foreach ($conditions as $key => $value) {
-                if (ctype_digit($key)) {
-                    $this->conditions[] = $value;
-                } else {
-                    $this->conditions[$key] = $value;
-                }
-            }
+        if (array_is_list($conditions)) {
+            throw new BadQueryConditionException('Conditions needs to be an associative array to prevent SQL injection.');
+        }
+
+        foreach ($conditions as $key => $value) {
+            $this->conditions[$key] = $value;
         }
 
         return $this;
@@ -93,7 +94,7 @@ class Query
     public function first()
     {
         $this->limit(1);
-        $result = Connection::getInstance()->query($this->__toString(), true);
+        $result = Connection::getInstance()->query($this->formatForQuery(), $this->args, true);
 
         if ($result) {
             $result = $this->model->newEntity($result);
@@ -121,24 +122,43 @@ class Query
      *
      * @return string
      */
-    public function __toString(): string
+    public function formatForQuery(): string
     {
-        $where = $this->conditions === [] ? '' : ' WHERE ' . implode(' AND ', $this->conditions);
+        return
+            $this->prepareSelectForQuery()
+            . $this->prepareFromForQuery()
+            . $this->prepareConditionsForQuery()
+            . $this->prepareLimitForQuery()
+            . ';';
+    }
 
-        if ($this->fields) {
-            $result = 'SELECT ' . implode(', ', $this->fields);
-        } else {
-            $result = 'SELECT * ';
+    /**
+     * Prepare SELECT for query
+     *
+     * @return string
+     */
+    private function prepareSelectForQuery(): string
+    {
+        if (empty($this->fields)) {
+            return 'SELECT * ';
         }
 
-        $result .= 'FROM ' . $this->from;
-        $result .= $this->prepareWhereForQuery();
-
-        if ($this->limit) {
-            $result .= ' LIMIT ' . $this->limit;
+        $result = ['SELECT'];
+        foreach ($this->fields as $field) {
+            $result[] = "`$field`";
         }
 
-        return $result . ';';
+        return implode(' ', $result);
+    }
+
+    /**
+     * Prepare FROM for query
+     *
+     * @return string
+     */
+    private function prepareFromForQuery(): string
+    {
+        return " FROM {$this->from}";
     }
 
     /**
@@ -146,20 +166,28 @@ class Query
      *
      * @return string
      */
-    private function prepareWhereForQuery(): string
+    private function prepareConditionsForQuery(): string
     {
-        $result = '';
+        $result = ' WHERE ';
+        $prefix = '';
 
         foreach ($this->conditions as $key => $value) {
-            if (ctype_digit($key)) {
-                $result .= " $value";
-            } else {
-                $result .= " $key = `$value`";
-            }
+            $result .= "$prefix`$key` = :$key";
+            $prefix = ' AND ';
+            $this->args[$key] = $value;
         }
-        dd(' ' . trim($result));
 
-        return ' ' . trim($result);
+        return $result;
+    }
+
+    /**
+     * Prepare limit for query
+     *
+     * @return string
+     */
+    private function prepareLimitForQuery(): string
+    {
+        return $this->limit ? " LIMIT {$this->limit}" : '';
     }
 
     /**
@@ -167,7 +195,7 @@ class Query
      */
     public function all()
     {
-        $result = Connection::getInstance()->query($this->__toString());
+        $result = Connection::getInstance()->query($this->formatForQuery(), $this->args);
 
         return array_map(function ($data) {
             return $this->model->newEntity($data);
