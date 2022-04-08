@@ -30,7 +30,5 @@ class ListsController extends AppController implements ControllerInterface
      */
     public function index()
     {
-        $lists = $this->Lists->query()->where('name = My test list')->where(['id' => 2])->all();
-        dd($lists);
     }
 }
