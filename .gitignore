@@ -36,3 +36,7 @@ logs/*
 
 # Config
 config/app.local.php
+
+# Themes
+themes/*
+!themes/.empty
