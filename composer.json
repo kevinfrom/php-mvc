@@ -1,27 +1,48 @@
 {
-	"name"    : "kevin/php-mvc",
-	"type"    : "project",
-	"authors" : [
-		{
-			"name" : "Kevin From",
-			"email": "kevinfrom@live.dk"
-		}
-	],
-	"autoload": {
-		"psr-4": {
-			"App\\": "src/"
-		}
-	},
-	"require" : {
-		"php"         : "^8.1",
-		"ext-mbstring": "*",
-		"ext-json"    : "*",
-		"ext-intl"    : "*",
-        "ext-pdo"     : "*",
-        "ext-ctype": "*"
+    "name": "kevin/php-mvc",
+    "description": "A php 8 MVC framework built from the ground up. Just for fun.",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Kevin From",
+            "email": "kevinfrom@live.dk"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
     },
-	"scripts" : {
-		"post-install-cmd": "App\\Installer\\AppInstaller::postInstall",
-		"post-update-cmd" : "App\\Installer\\AppInstaller::postupdate"
-	}
+    "require": {
+        "php": "^8.1",
+        "ext-mbstring": "*",
+        "ext-json": "*",
+        "ext-intl": "*",
+        "ext-pdo": "*",
+        "ext-ctype": "*",
+        "kevinfrom/vestjysk-udlejning-mvc-theme": "dev-feature/php-mvc-rewrite"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest",
+        "kevinfrom/php-mvc-package-installer": "dev-main"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/kevinfrom/php-mvc-package-installer"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/kevinfrom/vestjysk-udlejning.dk"
+        }
+    ],
+    "scripts": {
+        "post-install-cmd": "App\\Installer\\AppInstaller::postInstall",
+        "post-update-cmd": "App\\Installer\\AppInstaller::postupdate"
+    },
+    "config": {
+        "allow-plugins": {
+            "kevinfrom/php-mvc-package-installer": true
+        }
+    }
 }
