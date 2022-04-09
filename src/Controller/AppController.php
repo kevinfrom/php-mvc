@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\ORM\Model\MissingModelException;
 use App\ORM\Model\ModelFactory;
 use App\Request\RequestInterface;
+use App\View\AppView;
 
 /**
  * Class AppController
@@ -19,11 +20,17 @@ class AppController implements ControllerInterface
     private ?RequestInterface $_request;
 
     /**
+     * @var AppView $_view
+     */
+    private AppView $_view;
+
+    /**
      * @inheritDoc
      */
     public function __construct(RequestInterface $request)
     {
         $this->_request = $request;
+        $this->_view = new AppView($request->getParam('method'));
     }
 
     /**
@@ -32,6 +39,14 @@ class AppController implements ControllerInterface
     public function getRequest(): RequestInterface
     {
         return $this->_request;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getView(): AppView
+    {
+        return $this->_view;
     }
 
     /**

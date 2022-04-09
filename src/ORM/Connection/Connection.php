@@ -52,7 +52,7 @@ class Connection
     private function _connect()
     {
         try {
-            extract($this->_config);
+            extract($this->_config, EXTR_OVERWRITE);
             $this->_pdo = new PDO("mysql:host=$host;dbname=$database", $username, $password, [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,

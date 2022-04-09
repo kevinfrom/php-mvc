@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Core\Configure;
 use App\Logging\Logger;
-use App\View\AppView;
 use App\View\MissingViewException;
 use Throwable;
 
@@ -15,16 +14,6 @@ use Throwable;
  */
 class ErrorController extends AppController implements ControllerInterface
 {
-
-    /**
-     * Returns if debug is active
-     *
-     * @return bool
-     */
-    private function debugActive(): bool
-    {
-        return (bool)Configure::read('debug');
-    }
 
     /**
      * Render error 404 view
@@ -39,8 +28,18 @@ class ErrorController extends AppController implements ControllerInterface
         }
 
         http_response_code(404);
-        new AppView('404');
+        $this->getView()->setTemplate('404');
         Logger::debug($debugMessage);
+    }
+
+    /**
+     * Returns if debug is active
+     *
+     * @return bool
+     */
+    private function debugActive(): bool
+    {
+        return (bool)Configure::read('debug');
     }
 
     /**
@@ -56,6 +55,6 @@ class ErrorController extends AppController implements ControllerInterface
             dd($exception);
         }
 
-        new AppView('500');
+        $this->getView()->setTemplate('500');
     }
 }

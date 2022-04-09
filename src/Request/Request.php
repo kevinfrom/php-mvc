@@ -3,6 +3,7 @@
 namespace App\Request;
 
 use App\Controller\PagesController;
+use App\Core\Configure;
 
 /**
  * Class Request
@@ -61,7 +62,7 @@ class Request implements RequestInterface
         $pageExists = function (string $page): bool {
             $pagesController = new PagesController($this);
 
-            return $pagesController->viewExists($page);
+            return $pagesController->getView()->viewExists($page);
         };
 
         $controllerExists = function (string $controller): bool {
@@ -86,7 +87,7 @@ class Request implements RequestInterface
                 if ($pageExists($params[0]) === false) {
                     $this->_params = [
                         'controller' => 'Error',
-                        'method'     => 'error404',
+                        'method'     => Configure::read('debug') ? 'error500' : 'error404',
                     ];
                 }
             }

@@ -56,11 +56,12 @@ class Router
             $method = $this->getRequest()->getParam('method');
 
             if (method_exists($controllerClass, $method)) {
-                $arguments = array_filter($this->getRequest()->getParams(), function ($key) {
+                $arguments = array_filter($this->getRequest()->getParams(), static function ($key) {
                     return is_string($key) === false;
                 }, ARRAY_FILTER_USE_KEY);
 
                 $controllerClass->{$method}(...$arguments);
+                $controllerClass->getView()->render();
             } else {
                 $this->_throwNotFound();
             }
@@ -106,6 +107,7 @@ class Router
     {
         $controller = new ErrorController($this->getRequest());
         $controller->error404();
+        $controller->getView()->render();
     }
 
     /**
@@ -117,6 +119,7 @@ class Router
     {
         $controller = new ErrorController($this->getRequest());
         $controller->error500($exception);
+        $controller->getView()->render();
     }
 
     /**

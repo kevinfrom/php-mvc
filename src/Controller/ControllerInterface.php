@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Request\RequestInterface;
+use App\View\AppView;
 
 /**
  * Interface ControllerInterface
@@ -23,6 +24,13 @@ interface ControllerInterface
      * @return RequestInterface
      */
     public function getRequest(): RequestInterface;
+
+    /**
+     * Get AppView
+     *
+     * @return AppView
+     */
+    public function getView(): AppView;
 
     /**
      * Load model

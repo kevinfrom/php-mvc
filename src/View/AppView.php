@@ -63,21 +63,28 @@ class AppView
      */
     public function __construct(string $template)
     {
-        $this->_setLayout('default');
-        $this->_setTemplate($template);
+        $this->setLayout('default');
+        $this->setTemplate($template);
     }
 
     /**
      * Set layout
      *
      * @param string $layout
+     * @return AppView
      */
-    private function _setLayout(string $layout)
+    public function setLayout(string $layout)
     {
         $this->_layoutFile = $this->_layoutsPath . $layout . $this->_fileExt;
     }
 
-    private function _setTemplate(string $template)
+    /**
+     * Set template
+     *
+     * @param string $template
+     * @return AppView
+     */
+    public function setTemplate(string $template): self
     {
         $viewFile = $this->_templatesPath . $template . $this->_fileExt;
 
@@ -88,34 +95,29 @@ class AppView
         }
 
         $this->_viewFile = $viewFile;
+
+        return $this;
     }
 
     /**
-     * Get rendered html
-     *
-     * @param string $includePath
-     * @return string
+     * @param string $view
+     * @return bool
      */
-    private function _getRenderedHtml(string $includePath): string
+    public function viewExists(string $view): bool
     {
-        extract($this->_data);
+        return file_exists(TEMPLATES . DS . $view . $this->_fileExt);
+    }
+
+    /**
+     * Open and append to a block
+     *
+     * @param string $block
+     */
+    public function append(string $block)
+    {
+        $this->_blocks[$block] = $this->fetch($block);
+        $this->_activeBlock = $block;
         ob_start();
-        include($includePath);
-
-        return (string)ob_get_clean();
-    }
-
-    /**
-     * Assign a value for view template
-     *
-     * @param string $key
-     * @param mixed $value
-     *
-     * @return void
-     */
-    public function assign(string $key, $value)
-    {
-        $this->_data[$key] = $value;
     }
 
     /**
@@ -129,18 +131,6 @@ class AppView
     public function fetch(string $key, $default = false)
     {
         return $this->_data[$key] ?? $default;
-    }
-
-    /**
-     * Open and append to a block
-     *
-     * @param string $block
-     */
-    public function append(string $block)
-    {
-        $this->_blocks[$block] = $this->fetch($block);
-        $this->_activeBlock = $block;
-        ob_start();
     }
 
     /**
@@ -158,6 +148,19 @@ class AppView
     }
 
     /**
+     * Assign a value for view template
+     *
+     * @param string $key
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function assign(string $key, $value)
+    {
+        $this->_data[$key] = $value;
+    }
+
+    /**
      * Render an element
      *
      * @param string $element
@@ -171,9 +174,24 @@ class AppView
     }
 
     /**
-     * Render view when destructed
+     * Get rendered html
+     *
+     * @param string $includePath
+     * @return string
      */
-    public function __destruct()
+    private function _getRenderedHtml(string $includePath): string
+    {
+        extract($this->_data, EXTR_OVERWRITE);
+        ob_start();
+        include($includePath);
+
+        return trim((string)ob_get_clean());
+    }
+
+    /**
+     * Render view
+     */
+    public function render()
     {
         $this->assign('content', $this->_getRenderedHtml($this->_viewFile));
         echo $this->_getRenderedHtml($this->_layoutFile);
