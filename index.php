@@ -6,29 +6,10 @@
 ini_set('error_reporting', E_ALL);
 require_once 'config' . DIRECTORY_SEPARATOR . 'requirements.php';
 
-use App\Core\Configure;
-use App\ORM\Connection\Connection;
-use App\Routing\Router;
-
+use App\Application\Application;
 
 require_once 'config' . DIRECTORY_SEPARATOR . 'paths.php';
 require_once 'vendor' . DS . 'autoload.php';
 require_once CONFIG . DS . 'functions.php';
 
-
-Configure::initialize();
-$errorLevel = Configure::read('Log.errorLevel');
-if (Configure::read('debug')) {
-    $errorLevel = Configure::read('Log.debugErrorLevel');
-}
-ini_set('error_reporting', $errorLevel);
-date_default_timezone_set(Configure::read('App.defaultTimezone'));
-ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
-
-Connection::getInstance()->initialize(Configure::read('Database'));
-
-if (isCli() === false) {
-    require_once CONFIG . DS . 'routes.php';
-
-    Router::getInstance()->handleRouting();
-}
+Application::getInstance()->bootstrap();

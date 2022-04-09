@@ -3,7 +3,7 @@
 namespace App\Request;
 
 use App\Controller\PagesController;
-use App\Core\Configure;
+use App\Configuration\Configure;
 
 /**
  * Class Request

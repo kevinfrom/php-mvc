@@ -31,6 +31,7 @@ class Router
      */
     private function __construct()
     {
+        require_once CONFIG . DS . 'routes.php';
         $this->_request = new Request();
     }
 

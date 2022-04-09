@@ -1,29 +1,24 @@
 <?php
 
-namespace App\Core;
+namespace App\Configuration;
 
-/**
- * Class Configure
- *
- * @package App\Core
- */
 class Configure
 {
 
-    /**
-     * @var array $_config
-     */
     private static array $_config = [];
 
     /**
      * Initialize configuration
+     *
+     * @return void
+     * @throws ConfigurationException
      */
-    public static function initialize()
+    public static function initialize(): void
     {
         $configPath = CONFIG . DS . 'app.local.php';
 
         if (file_exists($configPath) === false) {
-            throw new \Exception(str_replace(ROOT . DS, '', $configPath) . ' does not exist');
+            throw new ConfigurationEXception(str_replace(ROOT . DS, '', $configPath) . ' does not exist');
         }
 
         self::$_config = include($configPath);
@@ -34,8 +29,9 @@ class Configure
      *
      * @param string $key
      * @param $value
+     * @return void
      */
-    public static function write(string $key, $value)
+    public static function write(string $key, $value): void
     {
         self::$_config[$key] = $value;
     }

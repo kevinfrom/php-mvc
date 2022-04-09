@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Core\Configure;
+use App\Configuration\Configure;
 use App\Logging\Logger;
 use App\View\MissingViewException;
 use Throwable;
