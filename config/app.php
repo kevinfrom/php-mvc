@@ -5,13 +5,13 @@ return [
     'cache' => true,
 
     'App' => [
-        'defaultLocale' => 'da_DK',
+        'defaultLocale'   => 'da_DK',
         'defaultTimezone' => 'Europe/Copenhagen',
-        'encoding' => 'UTF-8',
+        'encoding'        => 'UTF-8',
     ],
 
     'Database' => [
-        'host' => '',
+        'host'     => '',
         'username' => '',
         'password' => '',
         'database' => '',
@@ -19,14 +19,14 @@ return [
 
     'Cache' => [
         'oneHour' => [
-            'path' => CACHE,
+            'path'     => CACHE,
             'duration' => '+1 hours',
-            'prefix' => 'one_hour_',
+            'prefix'   => 'one_hour_',
         ],
     ],
 
     'Log' => [
-        'ErrorLevel' => E_ALL & ~E_DEPRECATED & ~E_STRICT,
+        'ErrorLevel'      => E_ALL & ~E_DEPRECATED & ~E_STRICT,
         'debugErrorLevel' => E_ALL,
     ],
 ];
